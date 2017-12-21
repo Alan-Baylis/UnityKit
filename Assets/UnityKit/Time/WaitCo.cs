@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace UnityKit.Tools {
+namespace UnityKit {
 
     public enum WaitType {
         Seconds,

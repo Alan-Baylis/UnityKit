@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace UnityKit.Tools {
+namespace UnityKit {
     public class Timer : IDisposable {
 
         float _counter;

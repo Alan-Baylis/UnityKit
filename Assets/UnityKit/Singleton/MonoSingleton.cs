@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace UnityKit.Tools {
+namespace UnityKit {
     abstract public class MonoSingleton<T>: MonoBehaviour where T: MonoSingleton<T> {
         static T _instance;
         public static T Instance {

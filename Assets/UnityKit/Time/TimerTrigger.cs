@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace UnityKit.Tools {
+namespace UnityKit {
     public class TimerTrigger : MonoSingleton<TimerTrigger> {
         List<Timer> _realTimers = new List<Timer>();
         List<Timer> _scaleTimers = new List<Timer>();

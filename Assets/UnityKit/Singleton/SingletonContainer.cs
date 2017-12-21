@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace UnityKit.Tools {
+namespace UnityKit {
     public class SingletonContainer {
         Dictionary<Type, object> _instances = new Dictionary<Type, object>();
 
