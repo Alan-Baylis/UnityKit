@@ -11,6 +11,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 593bcda6dd1ce4e448af26b49b9c48b9, type: 3}
   m_Name: es
   m_EditorClassIdentifier: 
+  _isDefaultLanguage: 0
+  _llcode: es
   _pack:
   - key: hello
     value: hello

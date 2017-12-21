@@ -6,7 +6,8 @@ using UnityEngine;
 
 namespace UnityKit {
     public class LanguagePack : ScriptableObject, ISerializationCallbackReceiver {
-
+        [ReadOnly]
+        [SerializeField]
         string _llcode = string.Empty;
         public string llcode {
             get { return _llcode; }
@@ -16,6 +17,14 @@ namespace UnityKit {
             }
         }
 
+        [SerializeField]
+        bool _isDefaultLanguage;
+        public bool isDefault {
+            get { return _isDefaultLanguage; }
+            set { _isDefaultLanguage = value; }
+        }
+
+        [HideInInspector]
         [SerializeField]
         List<LanguageWords> _pack = new List<LanguageWords>();
         public List<LanguageWords> pack { get { return _pack; } }

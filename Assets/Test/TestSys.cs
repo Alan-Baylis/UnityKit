@@ -9,7 +9,7 @@ public class TestSys : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+        var font = FontMgr.Instance["abc"];
 	}
 	
 	// Update is called once per frame

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace UnityKit {
     /// <summary>
@@ -59,10 +60,6 @@ namespace UnityKit {
             return _dict.Remove(item.Key);
         }
 
-        public void Remove(object key) {
-            Remove((string)key);
-        }
-
         public bool TryGetValue(string key, out string value) {
             return _dict.TryGetValue(key, out value);
         }
@@ -73,13 +70,50 @@ namespace UnityKit {
 
         public Language currentLanguge { get; private set; }
 
+        List<LanguagePack> _langePacks = new List<LanguagePack>();
+        LanguagePack _defaultLangPack;
+        LanguagePack _currentLangPack;
+
         public void Install(LanguagePack languagePack) {
+
+            for (int i = _langePacks.Count - 1; i >= 0; i--) {
+                var oldPack = _langePacks[i];
+                if (oldPack.llcode == languagePack.llcode) {
+                    if (_defaultLangPack == oldPack) _defaultLangPack = null;
+                    _langePacks.RemoveAt(i);
+                    if (oldPack == languagePack) continue;
+#if UNITY_EDITOR
+                    if (oldPack != null) {
+                        if (Application.isPlaying) {
+                            GameObject.Destroy(oldPack);
+                        } else {
+                            GameObject.DestroyImmediate(oldPack);
+                        }
+                    }
+#else
+                    if (oldPack != null) {
+                        GameObject.Destroy(oldPack);
+                    }
+#endif
+                }
+            }
+            if (languagePack.isDefault) _defaultLangPack = languagePack;
+            _langePacks.Add(languagePack);
+        }
+
+        public void SetCurrentLanguage(SystemLanguage language) { SetCurrentLanguage(Language.GetLanguageBySL(language)); }
+        public void SetCurrentLanguage(Language language) { SetCurrentLanguage(language.code); }
+        public void SetCurrentLanguage(string llcode) {
+
             _dict.Clear();
-            currentLanguge = Language.GetLanguageByCode(languagePack.llcode);
-            var pack = languagePack.pack;
-            for (int i = 0; i < pack.Count; i++) {
-                var words = pack[i];
-                _dict.Add(words.key,words.value);
+            _currentLangPack = _langePacks.Find(x=>x.llcode == llcode);
+            if (_currentLangPack == null) _currentLangPack = _defaultLangPack;
+            if (_currentLangPack == null) Debug.LogWarning("Language is not found");
+
+            var wordsPack = _currentLangPack.pack;
+            for (int i = 0; i < wordsPack.Count; i++) {
+                var words = wordsPack[i];
+                _dict.Add(words.key, words.value);
             }
         }
     }
