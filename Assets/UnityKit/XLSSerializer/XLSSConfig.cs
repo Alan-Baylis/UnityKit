@@ -9,7 +9,7 @@ namespace UnityKit {
         /// <summary>
         /// Excel 目录
         /// </summary>
-        public string ExcelPath = "Assets/Configs";
+        public string ExcelPath = "Assets/Editor Default Resources/Configs";
 
         /// <summary>
         /// 序列化导出路径

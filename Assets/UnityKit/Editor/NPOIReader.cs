@@ -13,6 +13,9 @@ namespace UnityKit.Editor {
             if (!File.Exists(excelFile)) {
                 throw new Exception("Excel file is not found");
             }
+            if (excelFile.EndsWith(".xlsx")) {
+                UnityEngine.Debug.LogWarning("xlsx is much lower than xls.");
+            }
 
             string[,] data = null;
             using (var fs = new FileStream(excelFile, FileMode.Open, FileAccess.Read)) {

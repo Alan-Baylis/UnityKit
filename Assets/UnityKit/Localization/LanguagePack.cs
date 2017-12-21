@@ -20,8 +20,11 @@ namespace UnityKit {
         List<LanguageWords> _pack = new List<LanguageWords>();
         public List<LanguageWords> pack { get { return _pack; } }
         
-        public void Add(string key, string value, string des) {
-            if (!_pack.TrueForAll(x => x.key != key)) throw new Exception(string.Format("language repeated -> key:{0}", key));
+        public void Add(string key, string value) {
+            if (!_pack.TrueForAll(x => x.key != key)) {
+                Debug.LogWarning(string.Format("language repeated -> key:{0}", key));
+                return;
+            }
             _pack.Add(new LanguageWords() {
                 key = key,
                 value = value
@@ -29,7 +32,10 @@ namespace UnityKit {
         }
 
         public void Add(LanguageWords words) {
-            if (!_pack.TrueForAll(x => x.key != words.key || x == words)) throw new Exception(string.Format("language repeated -> key:{0}", words.key));
+            if (!_pack.TrueForAll(x => x.key != words.key || x.Equals(words))) {
+                Debug.LogWarning(string.Format("language repeated -> key:{0}", words.key));
+                return;
+            }
             _pack.Add(words);
         }
 

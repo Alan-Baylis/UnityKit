@@ -1,0 +1,49 @@
+====================================================
+参考文件LanguageCodeReference.xls
+http://www.lingoes.cn/zh/translator/langcode.htm
+http://www.lingoes.net/en/translator/langcode.htm
+
+目前支持的语言如下
+====================================================
+af = Afrikaans
+ar = Arabic
+eu = Basque
+be = Belarusian
+bg = Bulgarian
+ca = Catalan
+zh = Chinese
+cs = Czech
+da = Danish
+nl = Dutch
+en = English
+et = Estonian
+fo = Faroese
+fi = Finnish
+fr = French
+de = German
+el = Greek
+he = Hebrew
+hu = Hungarian
+is = Icelandic
+id = Indonesian
+it = Italian
+ja = Japanese
+ko = Korean
+lv = Latvian
+lt = Lithuanian
+nb = Norwegian
+pl = Polish
+pt = Portuguese
+ro = Romanian
+ru = Russian
+sk = Slovak
+sl = Slovenian
+es = Spanish
+sv = Swedish
+th = Thai
+tr = Turkish
+uk = Ukrainian
+vi = Vietnamese
+sr-BA = SerboCroatian
+zh-CN = ChineseSimplified
+zh-TW = ChineseTraditional
