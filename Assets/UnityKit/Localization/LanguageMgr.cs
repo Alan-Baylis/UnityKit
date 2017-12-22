@@ -73,10 +73,10 @@ namespace UnityKit {
                 throw new Exception(string.Format("Language Not Found. And No Default-> {0}", codeOrName));
             }
 
-            var wordsPack = language.Words;
-            for (int i = 0; i < wordsPack.Count; i++) {
-                var words = wordsPack[i];
-                _dict.Add(words.key, words.value);
+            var words = language.Words;
+            for (int i = 0; i < words.Count; i++) {
+                var word = words[i];
+                _dict.Add(word.key, word.value);
             }
         }
     }

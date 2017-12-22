@@ -6,7 +6,7 @@ namespace UnityKit {
     /// 非线程安全对象池
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class ObjPool<T> : IDisposable {
+    public class ObjPool<T> : Singleton<ObjPool<T>>,IDisposable {
         public const int DEFAULT_CAPACITY = 20;
         protected List<T> _idleObjs;
         protected List<T> _usedObjs;
