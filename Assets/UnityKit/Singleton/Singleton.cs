@@ -9,7 +9,7 @@ namespace UnityKit {
 
         internal class InstanceWrapper<Cls> where Cls : class {
             static InstanceWrapper() { }
-            internal static readonly Cls instance = (Cls)Activator.CreateInstance(typeof(Cls),true);
+            internal static readonly Cls instance = (Cls)Activator.CreateInstance(typeof(Cls), true);
         }
     }
 }

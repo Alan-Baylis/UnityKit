@@ -45,17 +45,17 @@ namespace UnityKit.Editor {
             Directory.GetFiles(excelPath, "*.xls")
                 .ToList()
                 .ForEach(x=> {
-                    var llcode = Path.GetFileNameWithoutExtension(x);
-                    if (Language.IsLanguageCode(llcode)) {
+                    var code = Path.GetFileNameWithoutExtension(x);
+                    if (ISO6391.IsCode(code)) {
                         var table = reader.Read(x);
-                        var langpack = LanguagePack.CreateInstance<LanguagePack>();
-                        langpack.llcode = llcode;
+                        var language = Language.CreateInstance<Language>();
+                        language.code = code;
                         for (int r = 1; r < table.nrows; r++) {
                             var key = table[r, 0];
                             var value = table[r, 0];
-                            langpack.Add(key,value);
+                            language.Add(key,value);
                         }
-                        AssetDatabase.CreateAsset(langpack,Path.Combine(exportPath,llcode)+".asset");
+                        AssetDatabase.CreateAsset(language,Path.Combine(exportPath,code)+".asset");
                     }
                 });
         }
