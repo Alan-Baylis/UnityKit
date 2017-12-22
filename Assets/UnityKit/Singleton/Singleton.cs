@@ -1,27 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace UnityKit {
 
-    public class Singleton<T> where T:class, new(){
-        static T _instance;
-        static readonly object _lockObj;
-        
-        static Singleton() {
-            _lockObj = new object();
+    public class Singleton<T> where T : class {
+        public static T Instance {
+            get { return InstanceWrapper<T>.instance; }
         }
 
-        public static T Instance {
-            get {
-                if(_instance == null) {
-                    lock (_lockObj) {
-                        _instance = new T();
-                    }
-                }
-                return _instance;
-            }
+        internal class InstanceWrapper<Cls> where Cls : class {
+            static InstanceWrapper() { }
+            internal static readonly Cls instance = (Cls)Activator.CreateInstance(typeof(Cls),true);
         }
     }
 }
