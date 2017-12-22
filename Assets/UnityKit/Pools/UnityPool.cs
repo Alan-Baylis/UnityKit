@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace UnityKit {
-    public class UnityPool : MonoBehaviour {
+    public class UnityPool : MonoBehaviour, IDisposable {
 
         [SerializeField]
         private bool _dontDestroyOnload = false;
@@ -118,8 +118,17 @@ namespace UnityKit {
             return false;
         }
 
+        public void Clear() {
+            _poolNodes.ForEach(x=>x.Clear());
+        }
+
         virtual protected void OnDestroy() {
             _poolNodes.ForEach(x => x.Dispose());
         }
+
+        virtual public void Dispose() {
+            if(this.isActiveAndEnabled) Destroy(this);
+            _poolNodes.ForEach(x => x.Dispose());
+        } 
     }
 }

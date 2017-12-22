@@ -7,12 +7,11 @@ namespace UnityKit {
 
     [Serializable]
     public class UnityPoolNode  {
-
         [SerializeField]
-        private string _poolNodeName = "?";
+        private string _name = "<Please Set Name>";
         public string poolNodeName {
-            get { return _poolNodeName; }
-            set { _poolNodeName = value; }
+            get { return _name; }
+            set { _name = value; }
         }
 
         [SerializeField]
@@ -57,68 +56,93 @@ namespace UnityKit {
             set { _preLoadAsync = value; }
         }
 
-        protected List<GameObject> _idleItems = new List<GameObject>();
-        protected List<GameObject> _usedItems = new List<GameObject>();
+        protected List<GameObject> _idleObjs = new List<GameObject>();
+        protected List<GameObject> _usedObjs = new List<GameObject>();
 
-        public Action<GameObject> onRent;
-        public Action<GameObject> onReturn;
-        public Action<GameObject> CustomDestroy;
-
-        public bool Contains(GameObject obj) {
-            return _idleItems.Contains(obj) || _usedItems.Contains(obj);
+        protected Action<GameObject> _onBeforeRent;
+        public Action<GameObject> OnBreforeRent {
+            get { return _onBeforeRent; }
+            set { _onBeforeRent = value; }
         }
 
-        protected GameObject CreateGameObject() {
+        protected Action<GameObject> _onBeforeReturn;
+        public Action<GameObject> OnBreforeReturn {
+            get { return _onBeforeReturn; }
+            set { _onBeforeReturn = value; }
+        }
+        virtual protected void BeforeRent(GameObject go) {
+            if (go == null) return;
+            if (_onBeforeRent != null) _onBeforeRent.Invoke(go);
+            else go.SetActive(true);
+        }
+
+        virtual protected void BeforeReturn(GameObject go) {
+            if (go == null) return;
+            if (_onBeforeReturn != null) _onBeforeReturn.Invoke(go);
+            else go.SetActive(false);
+        }
+
+        protected Action<GameObject> _OnDestroy;
+        public Action<GameObject> OnDestroy {
+            get { return _OnDestroy; }
+            set { _OnDestroy = value; }
+        }
+
+        public bool Contains(GameObject go) {
+            return _idleObjs.Contains(go) || _usedObjs.Contains(go);
+        }
+
+        virtual protected GameObject CreateInstance() {
             var obj = GameObject.Instantiate(_prefab,_parent);
             obj.SetActive(false);
             return obj;
         }
 
-        protected void DestroyGameObject(GameObject go) {
+        protected void Destroy(GameObject go) {
             if (go == null) return;
-            if (CustomDestroy == null) CustomDestroy(go);
+            if (_OnDestroy == null) _OnDestroy(go);
             else GameObject.Destroy(go);
         }
 
         public void Preload() {
-            for (int i = _idleItems.Count; i < Math.Min(capacity, _preloadCount); i++) {
-                Return(CreateGameObject());
+            for (int i = _idleObjs.Count; i < Math.Min(capacity, _preloadCount); i++) {
+                Return(CreateInstance());
             }
         }
 
         public IEnumerator PreloadItetor() {
-            while (_idleItems.Count < _preloadCount) {
-                Return(CreateGameObject());
+            while (_idleObjs.Count < _preloadCount) {
+                Return(CreateInstance());
                 yield return null;
             }
         }
 
         virtual public GameObject Rent() {
-            GameObject obj;
-            int count = _idleItems.Count;
+            GameObject go;
+            int count = _idleObjs.Count;
             if (count > 0) {
-                obj = _idleItems[count - 1];
-                _idleItems.RemoveAt(count - 1);
-                if (obj == null) {
-                    obj = CreateGameObject();
+                go = _idleObjs[count - 1];
+                _idleObjs.RemoveAt(count - 1);
+                if (go == null) {
+                    go = CreateInstance();
                 }
             } else {
-                obj = CreateGameObject();
+                go = CreateInstance();
             }
-            _usedItems.Add(obj);
-            if (onRent != null) onRent.Invoke(obj);
-            return obj;
+            _usedObjs.Add(go);
+            BeforeRent(go);
+            return go;
         }
 
-        virtual public bool Return(GameObject obj) {
-            if (_usedItems.Contains(obj)) {
-                _usedItems.Remove(obj);
-                if (obj != null) {
-                    if (capacity > _idleItems.Count) {
-                        _idleItems.Add(obj);
-                        if (onReturn != null) onReturn.Invoke(obj);
+        virtual public bool Return(GameObject go) {
+            if (_usedObjs.Contains(go)) {
+                _usedObjs.Remove(go);
+                if (go != null) {
+                    if (capacity > _idleObjs.Count) {
+                        _idleObjs.Add(go);
+                        BeforeReturn(go);
                     } else {
-                        DestroyGameObject(obj);
+                        Destroy(go);
                     }
                 }
                 return true;
@@ -127,25 +151,25 @@ namespace UnityKit {
         }
 
         public void ReturnAll() {
-            new List<GameObject>(_usedItems).ForEach((x)=>Return(x));
+            new List<GameObject>(_usedObjs).ForEach((x)=>Return(x));
         }
 
         public void Return(Predicate<GameObject> pred) {
-            _usedItems.FindAll(pred).ForEach(x=>Return(x));
+            _usedObjs.FindAll(pred).ForEach(x=>Return(x));
         }
 
-        void Clean() {
-            _usedItems.ForEach(DestroyGameObject);
-            _idleItems.ForEach(DestroyGameObject);
-            _usedItems.Clear();
-            _idleItems.Clear();
+        public void Clear() {
+            _usedObjs.ForEach(Destroy);
+            _idleObjs.ForEach(Destroy);
+            _usedObjs.Clear();
+            _idleObjs.Clear();
         }
 
         virtual public void Dispose() {
-            Clean();
-            onRent = null;
-            onReturn = null;
-            CustomDestroy = null;
+            Clear();
+            _onBeforeRent = null;
+            _onBeforeReturn = null;
+            _OnDestroy = null;
         }
     }
 }
